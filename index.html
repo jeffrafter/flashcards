@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Flashcards!</title>
+    <link href="./javascripts/facybox/facybox.css" media="screen" rel="stylesheet" type="text/css"/>
+    <link href="./flashcards.css" media="screen" rel="stylesheet" type="text/css"/>
+    <script type="text/javascript" src="./javascripts/jquery-1.3.2.min.js"></script>
+    <script type="text/javascript" src="./javascripts/facybox/facybox.js"></script>
+    <script type="text/javascript">
+      var cards = [];
+      var card = null;
+      var autoHideAnswer = true;
+      var editTitle = null;
+    
+      $(document).ready(function(){
+        $('a[rel*=facybox]').facybox(); 
+        reload();
+      });  
+
+      $(document).bind('afterReveal.facybox', function() {
+        $('#facybox input[type*=text]').val('');
+        $('#facybox input[type*=text]:first').focus();
+        contentLoaded = false;
+      });
+      
+      $(document).bind('afterClose.facybox', function() {
+        editTitle = null;
+      });
+      
+      function submitCardForm(form) {  
+        try {  
+          var saveEditTitle = editTitle;
+          // Check if we already have the value in the table
+          var title = $('#facybox input[name*=title]').val();
+          var question = $('#facybox input[name*=question]').val();
+          var answer = $('#facybox input[name*=answer]').val();
+          var reference = $('#facybox input[name*=reference]').val();
+          // Make sure it doesn't already exist
+          if (title != saveEditTitle) {
+            var titles = $('table.flashcards td.title a');
+            for (var i=0; i<titles.length; i++) {
+              if (titles[i].innerHTML == title) {        
+                // We could use some jquery ui here to highlight the row, right?
+                alert("So sorry, that title already exists");
+                return false;
+              }
+            }
+          }
+          // Close the box
+          $(document).trigger('close.facybox'); 
+
+          // Append or fetch the card
+          if (saveEditTitle) { 
+            card = getCardByTitle(saveEditTitle);
+          } else {
+            cards.push(card = {});  
+          }
+
+          card["title"] = title;
+          card["question"] = question;
+          card["answer"] = answer;
+          card["reference"] = reference;
+          card["viewed"] = card["viewed"] || 0;
+          card["right"] = card["right"] || 0;
+          card["wrong"] = card["wrong"] || 0;
+                    
+          flush();
+        } catch(ex) {
+          alert(ex);
+        }
+        return false;
+      }
+      
+      function addCardRow(card) {
+        var total = (card["right"] + card["wrong"]);
+        var accuracy = (total == 0 ? 0 : Math.floor((card["right"] / total) * 100));
+        $('table.flashcards tbody').append(""+    
+        "<tr>"+
+        "  <td class='title'><a href='#' onclick='showCard(\"" + card["title"] + "\"); return false'>" +  card["title"] + "</a></td>"+
+        "  <td class='question'>" +  card["question"] + "</td>"+
+        "  <td class='viewed' align='right'>" +  card["viewed"] + "</td>"+
+        "  <td class='accuracy " + (accuracy >= 70 ? 'green' : 'red') + "' align='right'>" +  accuracy + "%</td>"+
+        "</tr>");
+      }
+      
+      function flush() {
+        document.getElementById('clip').value = JSON.stringify(cards);        
+        reload();
+      }
+
+      function getCardByTitle(title) {
+        for (var i=0; i < cards.length; i++) {
+          if (cards[i]["title"] == title) return cards[i];                  
+        }
+        alert("Couldn't find title");
+      }
+      
+      function showCard(title) {
+        card = getCardByTitle(title);
+        if (autoHideAnswer) $('div.cardAnswer').hide(100);
+        $('.showTitle').text(card["title"]);
+        $('.showQuestion').text(card["question"]);
+        $('.showAnswer').html(card["answer"]);
+        $('.showReference').text(card["reference"]);
+        $('.showReference').attr('href', card["reference"]);
+        card["viewed"] += 1;
+        flush();
+        if ($('#facybox').attr('style').indexOf('none') >= 0) {
+          jQuery.facybox({ div: '#showcard' })        
+        }
+      }
+
+      function right() {
+        card["right"] += 1;
+        flush();
+        next();
+      }
+      
+      function wrong() {
+        card["wrong"] += 1;
+        flush();
+        next();
+      }
+      
+      function next() {        
+        if (cards.length == 0) return;
+        var index = cards.indexOf(card);
+        index += 1;
+        if (index >= cards.length) index = 0;
+        showCard(cards[index]["title"]);
+      }
+
+      function previous() {
+        if (cards.length == 0) return;
+        var index = cards.indexOf(card);
+        index -= 1;
+        if (index < 0) index = cards.length-1;
+        showCard(cards[index]["title"]);
+      }
+      
+      function edit() {
+        editTitle = card["title"];
+        jQuery.facybox({ div: '#cardform' })                
+        $('#facybox input[name*=title]').val(card["title"]);
+        $('#facybox input[name*=question]').val(card["question"]);
+        $('#facybox input[name*=answer]').val(card["answer"]);
+        $('#facybox input[name*=reference]').val(card["reference"]);
+      }
+      
+      function remove() {
+        if (!window.confirm("Are you sure you want to remove this flashcard?")) return;
+        $(document).trigger('close.facybox'); 
+        var index = cards.indexOf(card);        
+        cards = cards.slice(0,index).concat(cards.slice(index+1));
+        delete card;
+        flush(); 
+      }
+
+      function reload() {        
+        var saveCardTitle = (card ? card["title"] : null);
+        cards = eval(document.getElementById('clip').value) || [];
+        $('table.flashcards tbody').empty();
+        for (var i=0; i < cards.length; i++) {
+          addCardRow(cards[i]);
+        }
+        if (saveCardTitle) card = getCardByTitle(saveCardTitle);
+      }
+    
+      var uploading = false;
+          
+      function upload() {
+        if (uploading) return;
+        uploading = true;
+        try {
+          $('#clip').load(document.forms[1].file.files[0].name);
+          document.getElementById('uploader').reset();
+          setTimeout('reload()', 100);
+        } finally {
+          uploading = false;
+        }
+      }
+      
+      function reset() {
+        if (!window.confirm("Are you sure you want to reset all of the counts?")) return;
+        for (var i=0; i < cards.length; i++) {
+          cards[i]["viewed"] = 0;
+          cards[i]["right"] = 0;
+          cards[i]["wrong"] = 0;
+        }
+        flush();
+      }
+
+    </script>
+  </head>
+  <body>
+    <div id="page">
+      <div class="width2">
+        <h1>Flash cards</h1>          
+        <table class="flashcards" style="margin-bottom:30px;border-bottom:1px dotted silver">
+          <thead>
+            <tr>
+              <th class="name" style="width:300px;text-align:left;">Title</th>
+              <th class="name" style="width:480px;text-align:left;">Question</th>
+              <th class="name" style="width:69px;">Viewed</th>
+              <th class="name" style="width:69px;">Accuracy</th>
+            </tr>
+          </thead>
+          <tbody>            
+          </tbody>
+        </table>
+        <div>
+          <a href="#cardform" rel="facybox" accesskey="C	">Add a new flashcard</a>
+          <span style="float:right"><a href="#" onclick="reset(); return false">Reset</a></span>
+        </div>
+      </div>
+      
+      <div class="cliparea" style="color:silver">
+        <form>
+          <label>Clipboard: <textarea id="clip" style="width:550px;height:100px;color:silver;"></textarea></label>
+        </form>  
+        <div style="margin-left:18px;">
+          <button onclick="reload();">Reload</button>
+        </div>
+        <form style="position:absolute; margin-left:330px; margin-top:-40px; padding: 16px; " method="post" id="uploader" enctype="multipart/form-data" action="#">        
+          <input type="file" onchange="upload();" name="file" id="file">
+        </form>
+      </div> 
+
+      <div class="blue" style="float:right;font-size:small;display:none;">
+        <h4>Keyboard shortcuts</h4>
+        <dl> 
+          <dt>Ctrl+C</dt><dd>Add a new flashcard</dd>
+          <dt>Ctrl+N</dt><dd>Next card</dd>
+          <dt>Ctrl+P</dt><dd>Previous card</dd>
+          <dt>Ctrl+R</dt><dd>Right</dd>
+          <dt>Ctrl+W</dt><dd>Wrong</dd>
+        </dl>
+      </div>
+
+    </div>
+        
+    <div style="display:none">
+      <div id="cardform">
+        <div style="width:545px;overflow:auto;padding:10px;">
+          <h3>Flashcard</h3>
+          <form action="" method="" class="flashcard" onsubmit="return submitCardForm(this);">
+            <fieldset class="width2">
+              <p>When you add a flashcard you will be able to test yourself
+              and see how you do with the answers.</p>
+            </fieldset>
+            <fieldset class="width2">
+              <label class="width2">Title <input type="text" name="title" id="title" value=""/></label>
+              <label class="width2">Question <input type="text" name="question" id="question" value=""/></label>
+              <label class="width2">Answer <input type="text" name="answer" id="answer" value=""/></label>
+              <label class="width2">Reference <input type="text" name="reference" id="reference" value=""/></label>
+            </fieldset>
+            <fieldset class="width2 align-left">
+              <input type="submit" value="Save Flashcard" style="float:right;" />
+            </fieldset>  
+          </form>
+        </div>
+      </div>          
+      
+      <div id="showcard">
+        <div style="width:545px;overflow:auto;padding:10px;">
+          <h3 class="showTitle"></h3>
+          <div class="cardBody">
+            <p class="showQuestion"></p>
+          </div>  
+          <a href="#" onclick="$('div.cardAnswer').toggle(100); return false">hide/show answer</a>
+          <span style="float:right">
+            <a href="#" onclick="edit(); return false">change</a>
+            <a href="#" onclick="remove(); return false">delete</a>
+          </span>
+          <div class="cardAnswer" style="border-top:1px dashed red;padding-top:12px;display:none;">          
+            <p class="showAnswer" style="font-style:italic;"></p>
+            <button accesskey="R" style="color:white;background:green;float:left;border:1px dotted black;margin:3px;" onclick="right();">Right</button>
+            <button accesskey="W" style="color:white;background:red;float:left;;border:1px dotted black;margin:3px;" onclick="wrong();">Wrong</button>
+          </div>  
+        </div>
+        <hr>
+        <button accesskey="P" onclick="previous();">Previous</button>
+        <button accesskey="N" onclick="next();">Next</button>
+        <div class="cardReference" style="font-size:small;float:right">
+          <a class="showReference" href="" target="_blank"></a>
+        </div>
+      </div>                
+  </body>
+</html>

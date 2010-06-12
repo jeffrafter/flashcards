@@ -1,0 +1,335 @@
+.orange {color:#FF6600}
+.green {color:#00ff0e;}
+.red {color:#ff000e;}
+.blue {color:#00A2F1;}
+.yellow {color:#fff300;}
+.black-reverse { background:#333; color:white }
+
+a { color: #ff6600; }
+a:hover { color: #333; background:#fff300; }
+a:active { color: #fff; background:#ff000e; }
+
+div.blogger-clickTrap {
+  display:none !important;
+}
+
+#navbar-iframe {
+  display: none !important;
+}
+
+body {
+  background:#fff;
+  margin:1in;
+  color:#333;
+  font-family: HelveticaNeue-Light,Helvetica,Arial,sans-serif; 
+  line-height: 1.5;
+}
+
+#outer-wrapper {
+  max-width:960px; 
+  min-width:960px;
+  margin: 1em auto;
+}
+
+#header-wrapper {
+  padding:0;
+  margin:0;
+  height:360px;
+}
+
+#main-wrapper {
+  width:474px;
+  padding:6px;
+  float:left;
+}
+
+#sidebar-wrapper {
+  width:474px;
+  float:right;
+}
+
+.side-single-column {
+  float:left;
+  padding:6px;
+  width:224px;
+}
+
+.side-double-column {
+  padding:6px;
+  float:left;
+  width:474px;
+}
+
+h1 {
+  font-weight:bold;
+  font-size:108px;
+  letter-spacing:-0.05em;
+  line-height:90px;
+  height:190px;
+  text-align:right;
+  color: #FF000E;
+  padding:0;
+  margin:0;
+}
+
+span { 
+  margin:0;
+  padding:0;
+}
+
+h1 a {
+  color:#FF000E;
+  text-decoration:none;
+}
+
+h2 {
+  font-weight:bold;
+  font-size:72px;
+  letter-spacing:-0.05em;
+  line-height:72px;
+  height:72px;  
+  text-align:right;
+  padding:0;
+  margin:0;
+}
+
+h3 {
+  font-weight:bold;
+  font-size:56px;
+  letter-spacing:-0.05em;
+  line-height:56px;
+  margin-top:0;
+  margin-bottom:12px;
+}
+
+h3 a {
+  color:inherit;
+  text-decoration:none;
+}
+
+h4.date-header {
+  color:#FFF;
+}
+
+h4.date-header span {
+  color:#FFF;
+  background:#00A2F1;
+  padding:4px;
+}
+
+span.reverse {
+  color: #FFF;
+  background:#FF000E;  
+}
+div.section {
+  float:left;
+  display:block;
+}
+div.footer {
+  background:#ff000e;
+}
+div.footer .links a {
+  color:white;
+  text-decoration:none;
+}
+div.footer .links a:hover {
+  color:black;
+  text-decoration:underline;
+}
+div.footer ul { padding:0; }
+div.footer ul.links { margin: 0; top: 0; height: 36px; float: left; font-size:16px; padding-top:30px;}
+div.footer ul.links li { display: block; line-height: 36px; border-left:1px dotted silver; padding-left:15px;}
+
+div.post-footer {
+  color:gray;
+  font-size:small;
+}
+
+div.home-listing {
+  width:100%;
+}
+
+ul.home-posts { 
+  padding:0;
+  border-left:1px solid #333;
+  list-style-type:none;
+}
+
+ul.home-posts li {
+  min-height:60px;
+  padding:6px;
+}
+
+ul.home-posts li:nth-child(odd) { 
+  background: rgba(96, 96, 96, 0.1); 
+}
+
+ul.home-posts .title {
+  color:white;
+}
+
+ul.home-posts .date {
+  color:gray;
+}
+
+ul.home-posts a {
+  font-weight:bold;
+  text-decoration:none;
+}
+
+
+
+/*
+Baseline - a designer framework
+Copyright (C) 2009 Stephane Curzi, ProjetUrbain.com
+Creative Commons Attribution-Share Alike 3.0 License
+*/
+
+/******************** Form ********************/
+
+form							{ overflow: auto; }
+fieldset,
+legend							{ padding-bottom: 18px; border:none}
+label							{ padding-top: 5px; margin: 0 0 11px 18px; float: left; display: block; }
+label.first						{ margin-left: 0; }
+input[type="text"],
+input[type="password"],
+input[type="select"],
+input[type="search"]			{ border: solid 1px #ccc; height: 16px; padding: 1px 2px; display: block; }
+textarea						{ border: solid 1px #ccc; height: 16px; padding: 0 2px; display: block; line-height: 18px; }
+select							{ display: block; margin-top: 2px; }
+input[type="submit"],
+input[type="reset"],
+input[type="button"]			{ margin-left: 12px; }
+
+label.width1,
+label.width2,
+label.width3,
+label.width4					{ float: left; }
+
+label.width1 input,
+label.width1 textarea			{ width: 228px; }
+label.width2 input,
+label.width2 textarea			{ width: 480px; }
+label.width3 input,
+label.width3 textarea			{ width: 732px; }
+label.width4 input,
+label.width4 textarea			{ width: 984px; }
+
+label.width1 select,
+label.width2 select,
+label.width3 select,
+label.width4 select				{ width: 100%; }
+
+label.unitx1, label.unitx2,
+label.unitx3, label.unitx4,
+label.unitx5, label.unitx6,
+label.unitx7, label.unitx8		{ float: left; }
+
+label.unitx1 input,
+label.unitx1 textarea			{ width: 102px; }
+label.unitx2 input,
+label.unitx2 textarea			{ width: 228px; }
+label.unitx3 input,
+label.unitx3 textarea			{ width: 354px; }
+label.unitx4 input,
+label.unitx4 textarea			{ width: 480px; }
+label.unitx5 input,
+label.unitx5 textarea			{ width: 606px; }
+label.unitx6 input,
+label.unitx6 textarea			{ width: 732px; }
+label.unitx7 input,
+label.unitx7 textarea			{ width: 858px; }
+label.unitx8 input,
+label.unitx8 textarea			{ width: 984px; }
+
+label.unitx1 select,
+label.unitx2 select,
+label.unitx3 select,
+label.unitx4 select,
+label.unitx5 select,
+label.unitx6 select,
+label.unitx7 select,
+label.unitx8 select				{ width: 100%; }
+
+label.singleline				{ height: 32px; margin-bottom: 0; }
+label.singleline input			{ width: auto; display: inline; margin-left: 12px; margin-top: 0; }
+
+label.multilinex2 textarea		{ height: 36px; }
+label.multilinex3 textarea		{ height: 54px; }
+label.multilinex4 textarea		{ height: 72px; }
+label.multilinex5 textarea		{ height: 90px; }
+label.multilinex6 textarea		{ height: 108px; }
+
+.width1 .radio-text				{ width: 228px; }
+.width2	.radio-text				{ width: 480px; }
+.width3	.radio-text				{ width: 732px; }
+.width4	.radio-text				{ width: 984px; }
+
+.radio							{ margin: 6px 0 0 1px; float: left; display: block; clear: left; }
+.radio-label					{ margin: 0 0 13px 0; padding-left: 18px; float: none; display: block; clear: none; }
+
+
+div.checkbox, 
+div.text, 
+div.textarea, 
+div.password, 
+div.select, 
+div.text_field, 
+div.password_field, 
+div.select_field {
+  float:none;
+  clear:both;
+  padding-top:8px;
+}
+
+div.checkbox label, 
+div.text label, 
+div.textarea label, 
+div.password label, 
+div.select label, 
+div.text_field label, 
+div.password_field label, 
+div.select_field label {
+  padding-top:5px;
+  padding-right:15px;
+  display:block;
+  width:150px;
+  float:left;
+  text-align:right;
+  
+}
+form.edit_page {
+  width:800px;
+}
+div.textarea textarea {
+  width:600px;
+  height:200px;
+  font-family:monospace;
+}
+div.submit { 
+  margin-top:10px; 
+  padding-top:10px; 
+  width:90%; 
+  float:right; 
+  border-top:1px dotted silver;
+}
+
+div.optional {
+  color:gray;
+}
+
+div.required {
+}
+
+span.saving {
+  padding-right:20px;
+  background-image:url("./images/saving.gif");
+  background-position:100% 50%;
+  background-repeat:no-repeat;
+}
+
+#page { width: 960px; padding: 0 0; margin: 0 auto; }
+
+th { background:black; color:white; padding:4px;}
+td { vertical-align:top }
